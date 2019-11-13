@@ -65,15 +65,16 @@ def pdf2xml(path, codec='utf-8', password = "", maxpages = 0, caching = True):
 	with open(path, 'rb') as fp:
 		interpreter = PDFPageInterpreter(rsrcmgr, device)
 		pagenos=set()
+		#pg = 1
 		for page in PDFPage.get_pages(fp, pagenos, maxpages=maxpages, password=password,caching=caching, check_extractable=True):
 			interpreter.process_page(page)
+			#xml = '%s %s %s' % ('<PAGE {}>'.format(pg), retstr.getvalue(), '</PAGE {}>'.format(pg))
+			#pg += 1
 		xml = retstr.getvalue()
 	
 	device.close()
 	retstr.close()
 	return xml
-
-
 
 
 if __name__ == "__main__":
