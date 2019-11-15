@@ -13,7 +13,7 @@ import os
 
 from tqdm import tqdm
 
-from utils.utils import parse_xml
+from utils.utils import parse_xml, str2bool
 
 import pdb
 
@@ -22,6 +22,7 @@ if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-i', '--input_folder', type=str, default='output_pdf/', help='Source folder containing the XML files. Default: \"output_pdf/\"')
 	parser.add_argument('-o', '--output_folder', type=str, default='output_xml/', help='Target folder containing the parsed xml files. Default: \"output_xml/\"')
+	parser.add_argument('-l', '--print_line', type=str2bool, default=True, help='Whether or not to print the box for every line in the output. Default: True')
 	args = parser.parse_args()
 
 	if os.path.isdir(args.input_folder):
@@ -41,7 +42,7 @@ if __name__ == "__main__":
 			input_fname = os.path.join(args.input_folder, fname)
 			output_fname = os.path.join(args.output_folder, fname)
 
-			output_text = parse_xml(input_fname)
+			output_text = parse_xml(input_fname, print_line=args.print_line)
 			with open(output_fname, 'w') as output_file:
 				output_file.write(output_text)
 

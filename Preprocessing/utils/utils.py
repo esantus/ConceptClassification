@@ -15,6 +15,20 @@ import pdb
 CHANGE_SIZE = ' ~ '
 
 
+def str2bool(v):
+	'''
+	Turns a string argument into boolean
+	'''
+	if isinstance(v, bool):
+	   return v
+	if v.lower() in ('yes', 'true', 't', 'y', '1'):
+		return True
+	elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+		return False
+	else:
+		raise argparse.ArgumentTypeError('Boolean value expected.')
+
+
 def change_extension(fname, extension='txt'):
 	'''
 	Change file extension to .txt
@@ -45,8 +59,8 @@ def pdf2txt(path, codec='utf-8', password = "", maxpages = 0, caching = True):
 
 def pdf2xml(path, codec='utf-8', password = "", maxpages = 0, caching = True):
 	'''
-    Given the name of a PDF file, use PDFMiner to extract its pages and return them as XML (in utf-8 bytes).
-    '''
+	Given the name of a PDF file, use PDFMiner to extract its pages and return them as XML (in utf-8 bytes).
+	'''
 	rsrcmgr = PDFResourceManager()
 	retstr = BytesIO()
 	laparams = LAParams()
@@ -138,13 +152,13 @@ def navigate_children(node, previous='', xml='', tabs='', print_tree=False, prin
 	return xml
 
 
-def parse_xml(path, print_tree=False):
+def parse_xml(path, print_tree=False, print_line=True):
 	'''
 	Given the name of a XML file, parse it and return it as XML (in utf-8 bytes).
 	'''
 	content = ET.parse(path)
 	root = content.getroot()
-	xml = navigate_children(root, print_line=True)
+	xml = navigate_children(root, print_line=print_line)
 
 	if print_tree:
 		print_children(root)
