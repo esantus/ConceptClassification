@@ -93,7 +93,7 @@ def print_children(node, tabs=''):
 
 
 
-def navigate_children(node, previous='', xml='', tabs='', print_tree=False):
+def navigate_children(node, previous='', xml='', tabs='', print_tree=False, print_line=True):
 	'''
 	Given a node, it saves an xml text file, navigating the children, breadth-first,
 	before moving to the next node.
@@ -112,14 +112,16 @@ def navigate_children(node, previous='', xml='', tabs='', print_tree=False):
 		if child.tag == 'page':
 			xml += '\n' + tabs + tag_it('page', ['id={}'.format(child.attrib['id'])])
 		elif child.tag == 'textbox':
-			xml += '\n' + tabs + tag_it('box', ['id={}'.format(child.attrib['id']), 'pos={}'.format(child.attrib['bbox'])])	
+			xml += '\n' + tabs + tag_it('box', ['id={}'.format(child.attrib['id']), 'pos={}'.format(child.attrib['bbox'])])
+		elif child.tag == 'textline' and print_line:
+			xml += '\n' + tabs + tag_it('line', ['pos={}'.format(child.attrib['bbox'])])
 		elif child.tag == 'text':
 			if previous != '' and previous.tag == 'text' and 'size' in previous.attrib and 'size' in child.attrib:
 				if float(previous.attrib['size']) != float(child.attrib['size']):
 					xml += CHANGE_SIZE
 
 			if '\n' in child.text:
-				if previous.text == '-':
+				if previous.text == '-' and not print_line:
 					xml = xml[:-1]
 				else:
 					xml += child.text.strip('\n') + ' '
@@ -131,7 +133,7 @@ def navigate_children(node, previous='', xml='', tabs='', print_tree=False):
 			print('{}{}: {} - {}'.format(tabs, child.tag, attribs, child.text))
 
 		previous = child
-		xml = navigate_children(child, previous, xml, tabs)
+		xml = navigate_children(child, previous, xml, tabs, print_line=print_line)
 
 	return xml
 
@@ -142,7 +144,7 @@ def parse_xml(path, print_tree=False):
 	'''
 	content = ET.parse(path)
 	root = content.getroot()
-	xml = navigate_children(root)
+	xml = navigate_children(root, print_line=True)
 
 	if print_tree:
 		print_children(root)

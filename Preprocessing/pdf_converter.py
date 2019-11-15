@@ -4,7 +4,7 @@ pdf_converter.py
 
 This script takes in input a folder with PDF files and generates an output folder with the same files parsed as TXT or XML files.
 
-CALL: USER$ python pdf_converter.py -i SourceFolder -o TargetFolder
+CALL: USER$ python pdf_converter.py -i SourceFolder -o TargetFolder -f format=[xml, txt]
 OUTPUT: TargetFolder containing all the PDFs parsed as either texts or xmls
 
 """
