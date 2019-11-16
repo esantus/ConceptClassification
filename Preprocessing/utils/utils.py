@@ -7,12 +7,25 @@ from io import StringIO
 from io import BytesIO
 
 import xml.etree.ElementTree as ET
+from xhtml2pdf import pisa
 
 import pdb
 
 
 # To signal a change in size of the characters in the PDF.
 CHANGE_SIZE = ' ~ '
+
+
+def xml2pdf(input_fname, output_fname):
+    '''
+    Open output file for writing (truncated binary)
+    '''
+    content = open(input_fname, 'rb').read()
+    output = open(output_fname, "w+b")
+    pisaStatus = pisa.CreatePDF(content, dest=output)
+    output.close()
+
+    return pisaStatus.err
 
 
 def str2bool(v):
