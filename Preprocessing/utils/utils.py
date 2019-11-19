@@ -7,6 +7,7 @@ from io import StringIO
 from io import BytesIO
 
 import xml.etree.ElementTree as ET
+from lxml import etree
 from xhtml2pdf import pisa
 
 import pdb
@@ -16,16 +17,23 @@ import pdb
 CHANGE_SIZE = ' ~ '
 
 
-def xml2pdf(input_fname, output_fname):
+def xml2pdf(input_fname, output_fname, print_html=False):
     '''
     Open output file for writing (truncated binary)
     '''
-    content = open(input_fname, 'rb').read()
-    output = open(output_fname, "w+b")
-    pisaStatus = pisa.CreatePDF(content, dest=output)
+    xslt_doc = etree.parse('./xml_support/spl.xsl')
+    xslt_transformer = etree.XSLT(xslt_doc)
+
+    source_doc = etree.parse(input_fname)
+    content = xslt_transformer(source_doc)
+    if print_html:
+    	content.write_output(output_fname[:-3]+'.html')
+    
+    output = open(output_fname, "wb")
+    xmxmlpisaStatus = pisa.CreatePDF(content, dest=output)
     output.close()
 
-    return pisaStatus.err
+    return True
 
 
 def str2bool(v):

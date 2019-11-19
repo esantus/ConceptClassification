@@ -37,8 +37,10 @@ if __name__ == "__main__":
 		# Parsing every file in the input directory and saving it
 		for i in tqdm(range(len(fnames))):
 			fname = fnames[i]
+			if not fname.endswith('.xml'):
+				continue
 			print('\n\tProcessing {}'.format(fname))
 			input_fname = os.path.join(args.input_folder, fname)
-			output_fname = os.path.join(args.output_folder, change_extension(fname, '.pdf'))
+			output_fname = os.path.join(args.output_folder, change_extension(fname, 'pdf'))
 
-			xml2pdf(input_fname, output_fname)
+			xml2pdf(input_fname, output_fname, print_html=False)
